@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"control_plane","Source":"./host","Dir":"host"},{"Key":"customer","Source":"./host","Dir":"host"},{"Key":"internal","Source":"./host","Dir":"host"},{"Key":"location","Source":"./location","Dir":"location"},{"Key":"openshift","Source":"./host","Dir":"host"}]}
