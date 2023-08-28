@@ -33,7 +33,6 @@ resource "ibm_is_instance" "location_hosts" {
 
 resource "ibm_is_floating_ip" "location_hosts" {
   count = var.hosts.count
-
   name   = ibm_is_instance.location_hosts[count.index].name
   target = ibm_is_instance.location_hosts[count.index].primary_network_interface[0].id
 }

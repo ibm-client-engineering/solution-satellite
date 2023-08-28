@@ -1,15 +1,15 @@
-# IBM Cloud Database on top of IBM Cloud Satellite location on VPC using Terraform
+# IBM Cloud Satellite location w/ Openshift on VPC using Terraform
 
 > Estimated duration: 2+ hours
 
 The `install-icd.sh` script will provision
 
 * an IBM Cloud Satellite location
-* an IBM Cloud VPC with 9 hosts
+* an IBM Cloud VPC with 12 hosts (including 3 Openshiift hosts)
 
 ## Pre-requisites
 
-* IAM API key, ssh keys with full access to Satellite, ICD services, VPC infrastructure and VPC block storage
+* IAM API key, ssh keys with full access to Satellite, ICD services, VPC infrastructure,VPC block storage and access to increase quota limits
 * a working Terraform installation
 
 ### IBM Cloud API key
@@ -27,6 +27,16 @@ before executing the `install-icd.sh` script.
 Create an SSH key in IBM Cloud VPC named `<ssh key name>`.
 
 > You need one in each region you want to provision to. For the example below make sure you've at least created one in us-east!
+
+### Create COS resource for targetted resource group
+
+1. Go to satellite environement in <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+2. Click "Resources" in the side menu and click "Create Resource"
+3. Search "Object Storage"  and select:
+    * Infrastructure: "IBM Cloud"
+    * Pricing Plan: "Standard"
+4. Populate COS name and appropriate resource group in which satellite location is being built in 
+5. Click "Create"
 
 ### Create terraform input variable file
 
@@ -89,19 +99,6 @@ Then, trigger the installation script by running
 
 ```sh
 ./install-icd.sh
-```
-
-[DRAFT] For example,
-
-```sh
-./install-icd.sh my-demo-location databases-for-postgresql pg-test-instance-for-demo
-```
-
-## Attach Hosts
-
-Login into IBM Cli, use appropriate env and target resource group
-```sh 
-ibmcloud sat host attach --location [location name]  --operating-system RHEL
 ```
 
 ## Post Installation
