@@ -111,11 +111,9 @@ The [Satellite Location](https://cloud.ibm.com/satellite/locations) console will
 
 ![hosts](images/sat-hosts.png)
 
-![service](images/sat-service.png)
+Once the Satellite location has been configured, the hosts must be assigned
 
-The Posgres database service will be similar to
-
-![postgres](images/icd-postgres.png)
+![hosts](images/assign_hosts.png)
 
 ## Cleanup
 
