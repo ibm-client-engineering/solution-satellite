@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: Sync repository
       run: |
+        set -vx
         git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
         cd sync-repo
         echo "1"
@@ -19,9 +20,8 @@ jobs:
         echo "2"
         git config --global user.email "terrabot@us.ibm.com"
         echo "3"
-        echo #git config --global user.name "${{ secrets.GHE_USER }}"
-#        git config --global user.name "${{ secrets.GHE_USER }}"
+        git config --global user.name "${{ secrets.GHE_USER }}"
         echo "4"
-        git config --global http.https://{{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
+        echo git config --global http.https://{{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
         echo "5"
         git push --mirror --force github-enterprise
