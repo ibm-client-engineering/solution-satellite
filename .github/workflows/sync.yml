@@ -20,7 +20,7 @@ jobs:
 #       with:
 #         repository: https://github.com/${{ github.repository }}
 #         path: sync-repo
-
+#          git remote set-url origin https://${{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
         run: |
           set -vx
           git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
@@ -30,7 +30,7 @@ jobs:
           echo "2"
           git config --global user.email "terrabot@us.ibm.com"
           echo "3"
-          git remote set-url origin https://${{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
+          git config --global http.https://${{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
           echo "4"
           git config --global user.name "${{ secrets.GHE_USER }}"
           echo "5"
