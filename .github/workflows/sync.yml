@@ -23,9 +23,9 @@ jobs:
           echo "2"
           git config --global user.email "terrabot@us.ibm.com"
           echo "3"
-          git config --global user.name "${{ GHE_USER }}"
+          git config --global user.name "$GHE_USER"
           echo "4"
-          echo git config --global http.https://{{ ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ GITHUB_TOKEN }}"
+          echo git config --global http.https://$ENTERPRISE_URL/.extraheader "AUTHORIZATION: token $GITHUB_TOKEN"
           echo "5"
           git push --mirror --force github-enterprise
         
