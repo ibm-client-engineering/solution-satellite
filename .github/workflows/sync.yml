@@ -9,7 +9,12 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - run: |
+      - name: Sync Repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
+          ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
+          GHE_USER: ${{ secrets.GHE_USER }}  
+        run: |
           set -vx
           git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
           cd sync-repo
@@ -24,8 +29,5 @@ jobs:
           echo "5"
           git push --mirror --force github-enterprise
         
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
-          ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
-          GHE_USER: ${{ secrets.GHE_USER }}  
+
 
