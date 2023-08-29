@@ -1,14 +1,14 @@
 name: Sync with GitHub Enterprise
-env:
-  GITHUB_TOKEN: "${{ secrets.GH_ENTERPRISE_TOKEN }}"
 
 on:
   push:
     branches:
       - '*'
-
+      
 jobs:
   sync:
+    env:
+        GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
     runs-on: ubuntu-latest
     steps:
     - name: Sync repository
