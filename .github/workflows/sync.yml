@@ -23,6 +23,7 @@ jobs:
           echo git config --global http.https://{{ ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ GITHUB_TOKEN }}"
           echo "5"
           git push --mirror --force github-enterprise
+        
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
           ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
