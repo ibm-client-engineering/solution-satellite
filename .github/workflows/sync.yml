@@ -1,4 +1,6 @@
 name: Sync with GitHub Enterprise
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
 
 on:
   push:
@@ -8,7 +10,6 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-
     steps:
     - name: Sync repository
       run: |
@@ -25,5 +26,4 @@ jobs:
         echo git config --global http.https://{{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ GITHUB_TOKEN }}"
         echo "5"
         git push --mirror --force github-enterprise
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
+
