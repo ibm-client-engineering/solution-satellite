@@ -39,6 +39,74 @@ title: Prepare
 
 ### IBM Cloud
 
+#### Export API Key
+
+Navigate to the working directory and run:
+```sh
+export TF_VAR_ibmcloud_api_key=<API key>
+```
+The script expects the API key in `TF_VAR_ibmcloud_api_key`
+
+#### Create .tfvars file
+Create a file named `<location name>.tfvars` (substitute your desired location name and ssh key) in the root directory of the repo (same directory as `install-icd.sh` script).
+
+The following values are required:
+```terraform
+location_name     = "<location name>"
+is_location_exist = false
+managed_from      = "wdc"
+manage_iam_policy = false
+region            = "us-east"
+image             = "ibm-redhat-8-6-minimal-amd64-3"
+existing_ssh_key  = "<ssh key name>"
+
+control_plane_hosts = { "name" : "cp", "count" : 3, "type" : "bx2-8x32" }
+customer_hosts      = { "name" : "customer", "count" : 3, "type" : "bx2-32x128" }
+internal_hosts      = { "name" : "internal", "count" : 3, "type" : "bx2-8x32" }
+openshift_hosts     = { "name" : "openshift", "count" : 3, "type" : "bx2-16x64" }
+```
+
+- `location_name`: name of the location
+- `is_location_exist`: if the location already exists before running this script, set this value to `true`
+- `managed_from`: needs to be an IBM Cloud region that is supported by IBM Cloud Databases on Satellite
+- `manage_iam_policy`: if the necessary IAM policies for the databases-for-* services already exist before running this script, set this value to `false`
+- `region`: the IBM Cloud region in which to deploy all VPC VSI, networks, etc. - should ideally correspond to the region picked in `managed_from`
+- `existing_ssh_key`: VPC SSH Key name - this needs to exist in `region`
+
+#### Execute Terraform scripts to build Locations
+
+Login into IBM Cloud CLI
+```sh
+ibmcloud login -sso
+```
+Target appropriate resource group
+```sh
+ibmcloud target -g [resource group]
+```
+When running for the first time, execute (in the repo root):
+```sh
+terraform init
+```
+```sh
+terraform plan -var-file=./[tvar input file].tfvars -out=./statefiles/[state file]
+```
+```sh
+terraform apply "./statefiles/[state file]"
+```
+#### Assign hosts to the control plane
+1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+2. Within the sidebar go to 'Satellite' -> 'Locations' -> select [location_name]
+3. Within 'Getting started' -> 'Set up control plane' and 'Assign Hosts' (control_plane hosts) to the control plane
+
+#### Create Red Hat OpenShift Service
+1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+2. Click 'Create Service' -> 'Red Hat Openshift on IBM Cloud'
+3. Choose 'Custom Cluster', 'Satellite' (Infrastructure)
+4. Select appropraite resource group and desired satellite [location_name]
+5. Select configuration to match the available hosts you want to use
+6. 'Enable cluster admin access for Satellite Config' - keep all other areas to default option
+7. Name cluster and 'Create'
+
 
 ### AWS
 
