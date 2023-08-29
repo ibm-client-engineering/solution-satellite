@@ -11,6 +11,8 @@ jobs:
 
     steps:
     - name: Sync repository
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
       run: |
         set -vx
         git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
@@ -22,6 +24,6 @@ jobs:
         echo "3"
         git config --global user.name "${{ secrets.GHE_USER }}"
         echo "4"
-        echo git config --global http.https://{{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
+        echo git config --global http.https://{{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ GITHUB_TOKEN }}"
         echo "5"
         git push --mirror --force github-enterprise
