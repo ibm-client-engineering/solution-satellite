@@ -10,10 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sync Repos
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
-          ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
-          GHE_USER: ${{ secrets.GHE_USER }}  
+#       env:
+#         GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
+#         ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
+#         GHE_USER: ${{ secrets.GHE_USER }}  
+
+#     - name: Mirror clone repo
+#       uses: actions/checkout@v2
+#       with:
+#         repository: https://github.com/${{ github.repository }}
+#         path: sync-repo
+
         run: |
           set -vx
           git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
@@ -23,9 +30,9 @@ jobs:
           echo "2"
           git config --global user.email "terrabot@us.ibm.com"
           echo "3"
-          git config --global user.name "$GHE_USER"
+          git remote set-url origin https://${{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
           echo "4"
-          echo git config --global http.https://$ENTERPRISE_URL/.extraheader "AUTHORIZATION: token $GITHUB_TOKEN"
+          git config --global user.name "${{ secrets.GHE_USER }}"
           echo "5"
           git push --mirror --force github-enterprise
         
