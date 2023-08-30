@@ -13,8 +13,8 @@ jobs:
         env:
 #         GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
 #         ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
-#         GHE_USER: ${{ secrets.GHE_USER }}
-          ENTERPRISE_URL: "github.ibm.com"
+          GHE_USER: ${{ variables.GH_BOT }}
+          ENTERPRISE_URL: ${{ variables.ENTERPRISE_GIT_URL }}
 
 #     - name: Mirror clone repo
 #       uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
           echo "3"
           git config --global http.https://$ENTERPRISE_URL/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
           echo "4"
-          git config --global user.name "${{ secrets.GHE_USER }}"
+          git config --global user.name "$GHE_USER"
           echo "5"
           git push --mirror --force github-enterprise
         
