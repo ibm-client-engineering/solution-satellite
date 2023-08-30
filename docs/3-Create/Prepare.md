@@ -8,7 +8,7 @@ title: Prepare
 
 ### IBM Cloud
 * IBM Cloud environment with access to IBM Satellite
-* Have the necessary permissions to create IAM API keys, ssh keys with full access to Satellite, ICD services, VPC infrastructure,VPC block storage and access to increased quota limits
+* Have the necessary permissions to create IAM API keys, SSH keys with full access to Satellite, ICD services, VPC infrastructure, VPC block storage, and access to increased quota limits
 * Terraform installation
 * API Key, SSH Key, COS bucket
 
@@ -33,7 +33,8 @@ title: Prepare
 4. Populate COS name and appropriate resource group in which satellite location is being built in and "Create"
 
 ### AWS
-* AWS account
+* Have the correct IBM Cloud permissions to create locations
+* Get AWS account access with the required permissions
 
 ## How to build Satellite Locations
 
