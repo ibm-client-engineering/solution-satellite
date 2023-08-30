@@ -13,8 +13,8 @@ jobs:
         env:
 #         GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
 #         ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
-          GHE_USER: ${{ variables.GH_BOT }}
-          ENTERPRISE_URL: ${{ variables.ENTERPRISE_GIT_URL }}
+          GHE_USER: ${{ vars.GH_BOT }}
+          ENTERPRISE_URL: ${{ vars.ENTERPRISE_GIT_URL }}
 
 #     - name: Mirror clone repo
 #       uses: actions/checkout@v2
