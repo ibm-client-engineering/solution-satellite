@@ -35,6 +35,7 @@ title: Prepare
 ### AWS
 * Have the correct IBM Cloud permissions to create locations
 * Get AWS account access with the required permissions
+* Obtain your AWS access key ID and AWS secret access key
 
 ## How to build Satellite Locations
 
@@ -95,7 +96,7 @@ terraform plan -var-file=./[tvar input file].tfvars -out=./statefiles/[state fil
 terraform apply "./statefiles/[state file]"
 ```
 #### Assign hosts to the control plane
-1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+1. Navigate to Satellite environment on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
 2. Within the sidebar go to 'Satellite' -> 'Locations' -> select [location_name]
 3. Within 'Getting started' -> 'Set up control plane' and 'Assign Hosts' (control_plane hosts) to the control plane
 
@@ -111,5 +112,68 @@ terraform apply "./statefiles/[state file]"
 
 ### AWS
 
+#### Automate AWS location setup with a Schematics template
+1. In your AWS cloud provider, set up your account credentials.
+2. From the Satellite console, click Create location.
+3. In the Setup section, click Amazon Web Services.
+4. In the AWS credentials section, enter the AWS access key ID and AWS secret access key values that you previously created.
+5. Click Fetch options from AWS.
+6. Review the Satellite location details. If you edited the AWS EC2 instances, you might want to click the Edit pencil icon to change details such as the description, API key, or IBM Cloud multizone region that the location is managed from.
+7. In the Summary pane, review the cost estimate.
+8. Click Create location. Your location might take about 30 minutes to finish provisioning.
 
+#### Adding AWS Hosts to Satellite
+1. From the Satellite console, select the location where you want to add AWS hosts.
+2. Retrieve the host registration script that you must run on your hosts to make them visible to your IBM Cloud Satellite location.
+    * From the Hosts tab, click Attach host.
+    * Optional: Enter any host labels that are used later to automatically assign) hosts to Satellite-enabled IBM Cloud services in the location. Labels must be provided as key-value pairs, and must match the request from the service. For example, you might have host labels such as `env=prod` or `service=database`. By default, your hosts get a `cpu`, `os`, and `memory` label, but you might want to add more to control the auto assignment, such as `env=prod` or `service=database`.
+    * Enter a file name for your script or use the name that is generated for you.
+    * Click Download script to generate the host script and download the script to your local machine. Note that the token in the script is an API key, which should be treated and protected as sensitive information.
+3. RHEL only Open the registration script. After the `API_URL` line, add a section to pull the required RHEL packages with the subscription manager.
+```sh
+# Enable AWS RHEL package updates
+yum update -y
+yum-config-manager --enable '*'
+yum repolist all
+yum install container-selinux -y
+echo "repos enabled"
+```
+4. From the AWS EC2 dashboard, go to Instances > Launch Templates.
+5. Click Create Launch template and enter the template details as follows.
 
+    * Enter a name for your launch template.
+    * In the Amazon machine image (AMI) section, make sure to select a supported Red Hat Enterprise Linux 7 or 8 operating system that you can find by entering the AMI ID. You can match AMI IDs and the proper Red Hat Enterprise Linux version by referring to the <a href="https://access.redhat.com/solutions/15356" target="_blank">Red Hat Enterprise Linux AMI Available on Amazon Web Services documentation</a>.
+    * From the Instance type section, select one of the <a href="https://cloud.ibm.com/docs/satellite?topic=satellite-aws#aws-instance-types" target="_blank">supported AWS instance types</a>.
+    * From the Key pair (login) section, select the .pem key that you want to use to log in to your machines later. If you do not have a .pem key, create one.
+    * In the Network settings, select Virtual Private Cloud (VPC) and an existing subnet and security group. If you do not have a subnet or security group that you want to use, create one.
+    * In the Storage (volumes) section, expand the default root volume and update the size of the boot volume to a minimum of 100 GB. Add a second disk with at least 100 GB capacity.
+    * Expand the Advanced details and go to the User Data field.
+    * Enter the host registration script that you modified earlier. If you are adding an RHCOS host, add the ignition script.
+    * Click Create launch template.
+
+6. From the Launch Templates dashboard, find the template that you created.
+7. From the Actions menu, select Launch instance from template.
+8. Enter the number of instances that you want to create and click Launch instance from template.
+9. Wait for the instance to launch. During the launch of your instance, the registration script runs automatically. This process takes a few minutes to complete.
+10. Monitor the progress of the registration script.
+
+    * From the EC2 Instances dashboard, retrieve the public IP address of your instance.
+    * Log in to your instance.
+```sh
+ssh -i <key>.pem ec2-user@<public_IP_address>
+```
+    * Review the status of the registration script.
+```sh
+journalctl -f -u ibm-host-attach
+```
+11. Check that your hosts are shown in the Hosts tab of your Satellite console. All hosts show a Health status of `Ready` when a connection to the machine can be established, and a Status of `Unassigned` as the hosts are not yet assigned to your Satellite location control plane or a Red Hat OpenShift on IBM Cloud cluster.
+12. Assign your AWS hosts to the Satellite control plane or a Red Hat OpenShift on IBM Cloud cluster.
+
+#### Create Red Hat OpenShift Service
+1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+2. Click 'Create Service' -> 'Red Hat Openshift on IBM Cloud'
+3. Choose 'Custom Cluster', 'Satellite' (Infrastructure)
+4. Select appropraite resource group and desired satellite [location_name]
+5. Select configuration to match the available hosts you want to use
+6. 'Enable cluster admin access for Satellite Config' - keep all other areas to default option
+7. Name cluster and 'Create'
