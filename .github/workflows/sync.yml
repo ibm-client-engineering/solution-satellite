@@ -1,4 +1,10 @@
 name: Sync with GitHub Enterprise
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
+  GHE_USER: ${{ vars.SYNC_USER }}
+  GHE_FULL_USER: ${{ vars.SYNC_USER_NAME }}
+  ENTERPRISE_URL: ${{ vars.ENTERPRISE_GIT_URL }}
+  ENTERPRISE_EMAIL: ${{ vars.SYNC_USER_EMAIL }}
 
 on:
   push:
@@ -9,33 +15,16 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync Repos
-        env:
-#         GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
-#         ENTERPRISE_URL: ${{ secrets.ENTERPRISE_URL }}
-          GHE_USER: ${{ vars.GH_BOT }}
-          ENTERPRISE_URL: ${{ vars.ENTERPRISE_GIT_URL }}
+      - name: Checkout repo and all branches to stage
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          fetch-depth: 0
 
-#     - name: Mirror clone repo
-#       uses: actions/checkout@v2
-#       with:
-#         repository: https://github.com/${{ github.repository }}
-#         path: sync-repo
-#          git remote set-url origin https://${{ secrets.ENTERPRISE_URL }}/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
-        run: |
-          set -vx
-          git clone --mirror "https://github.com/${{ github.repository }}" sync-repo
-          cd sync-repo
-          echo "1"
-          git remote add github-enterprise "https://cebot@github.ibm.com/${{ github.repository }}"
-          echo "2"
-          git config --global user.email "terrabot@us.ibm.com"
-          echo "3"
-          git config --global http.https://$ENTERPRISE_URL/.extraheader "AUTHORIZATION: token ${{ secrets.GH_ENTERPRISE_TOKEN }}"
-          echo "4"
-          git config --global user.name "$GHE_USER"
-          echo "5"
-          git push --mirror --force github-enterprise
-        
-
+      - name: Push the repo up to our internal github
+        uses: yesolutions/mirror-action@master
+        with:
+          REMOTE: 'https://${{ env.ENTERPRISE_URL }}/${{ github.repository }}'
+          GIT_USERNAME: ${{ env.GHE_USER }}
+          GIT_PASSWORD: ${{ env.GITHUB_TOKEN }}
 
