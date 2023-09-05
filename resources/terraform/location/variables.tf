@@ -23,3 +23,7 @@ variable "manage_iam_policy" {
   description = "Whether the IAM policies for service-to-service functionality on Satellite should be managed by Terraform"
   default     = false
 }
+
+variable "resource_group" {
+  description = "Name of the resource group on which location has to be created"
+}

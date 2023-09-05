@@ -14,6 +14,10 @@ variable "is_location_exist" {
   description = "Whether the location already exists or needs to be created"
 }
 
+variable "resource_group" {
+  description = "Name of the resource group on which location has to be created"
+}
+
 variable "managed_from" {
   type        = string
   description = "The IBM Cloud region to manage the Satellite location from"

@@ -1,17 +1,17 @@
+data "ibm_resource_group" "res_group" {
+  name = var.resource_group
+}
+
 resource "ibm_satellite_location" "create_location" {
   count = var.is_location_exist == false ? 1 : 0
 
   location     = var.location_name
   managed_from = var.managed_from
   zones        = [for idx in range(1, 4) : "${var.region}-${idx}"]
-
+  resource_group_id = data.ibm_resource_group.res_group.id
   timeouts {
     create = "60m"
   }
-
-  # depends_on = [
-  #   ibm_iam_authorization_policy.postgres-satellite,
-  # ]
 }
 
 resource "ibm_is_vpc" "location_vpc" {

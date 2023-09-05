@@ -33,7 +33,8 @@ title: Prepare
 4. Populate COS name and appropriate resource group in which satellite location is being built in and "Create"
 
 ### AWS
-* AWS account
+* Have the correct IBM Cloud permissions to create locations
+* Get AWS account access with the required permissions
 
 ## How to build Satellite Locations
 
@@ -109,6 +110,12 @@ terraform apply "./statefiles/[state file]"
 
 
 ### AWS
+:::tip
+
+Prior to building out Satellite locations on AWS, you need to use a resource group that provides full access for buidling out AWS locations on IBM Cloud Satellite
+
+:::
+
 
 
 
