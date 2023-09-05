@@ -35,6 +35,7 @@ title: Prepare
 ### AWS
 * Have the correct IBM Cloud permissions to create locations
 * Get AWS account access with the required permissions
+* AWS access key ID and AWS secret access key
 
 ## How to build Satellite Locations
 
@@ -97,6 +98,13 @@ terraform apply "./statefiles/[state file]"
 #### Assign hosts to the control plane
 1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
 2. Within the sidebar go to 'Satellite' -> 'Locations' -> select [location_name]
+
+:::tip
+
+Make sure to assign a host to each zone within the satellite location.
+
+:::
+
 3. Within 'Getting started' -> 'Set up control plane' and 'Assign Hosts' (control_plane hosts) to the control plane
 
 #### Create Red Hat OpenShift Service
@@ -116,6 +124,19 @@ Prior to building out Satellite locations on AWS, you need to use a resource gro
 
 :::
 
+1. Within IBM Console, navigate to 'Locations' and 'Create location+'
+2. Click 'AWS Quick Start'
+3. Enter credentials and click 'Fetch options from AWS'
+4. Within Satellite Location edit the config and update name and target appropriate resource group
+5. Create location
 
+#### Create Red Hat OpenShift Service
+1. Navigate to Satellite environement on <a href="https://cloud.ibm.com/" target="_blank">IBM Cloud Console</a>
+2. Click 'Create Service' -> 'Red Hat Openshift on IBM Cloud'
+3. Choose 'Custom Cluster', 'Satellite' (Infrastructure)
+4. Select appropraite resource group and desired satellite [location_name]
+5. Select configuration to match the available hosts you want to use
+6. 'Enable cluster admin access for Satellite Config' - keep all other areas to default option
+7. Name cluster and 'Create'
 
 
