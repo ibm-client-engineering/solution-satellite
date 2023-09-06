@@ -1,0 +1,30 @@
+name: Sync with GitHub Enterprise
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_ENTERPRISE_TOKEN }}
+  GHE_USER: ${{ vars.SYNC_USER }}
+  GHE_FULL_USER: ${{ vars.SYNC_USER_NAME }}
+  ENTERPRISE_URL: ${{ vars.ENTERPRISE_GIT_URL }}
+  ENTERPRISE_EMAIL: ${{ vars.SYNC_USER_EMAIL }}
+
+on:
+  push:
+    branches:
+      - '*'
+      
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo and all branches to stage
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          fetch-depth: 0
+
+      - name: Push the repo up to our internal github
+        uses: yesolutions/mirror-action@master
+        with:
+          REMOTE: 'https://${{ env.ENTERPRISE_URL }}/${{ github.repository }}'
+          GIT_USERNAME: ${{ env.GHE_USER }}
+          GIT_PASSWORD: ${{ env.GITHUB_TOKEN }}
+

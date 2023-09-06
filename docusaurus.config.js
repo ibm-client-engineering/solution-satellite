@@ -22,13 +22,13 @@ async function createconfig() {
     url: 'https://ibm-client-engineering.github.io',
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
-    baseUrl: '/solution-name/',
+    baseUrl: '/solution-satellite/',
 
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
     organizationName: 'ibm-client-engineering', // Usually your GitHub org/user name.
-    projectName: 'solution-name', // Usually your repo name.
+    projectName: 'solution-satellite', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
@@ -84,7 +84,7 @@ async function createconfig() {
             // Please change this to your repo.
             // Remove this to remove the "edit this page" links.
             editUrl:
-              'https://github.com/ibm-client-engineering/solution-name/tree/main/packages/create-docusaurus/templates/shared/',
+              'https://github.com/ibm-client-engineering/solution-satellite/tree/main/packages/create-docusaurus/templates/shared/',
           },
           theme: {
             customCss: require.resolve('./src/css/custom.css'),
@@ -95,7 +95,7 @@ async function createconfig() {
             // editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
             // Advanced use-case: functional editUrl
             editUrl: ({ locale, blogDirPath, blogPath, permalink }) =>
-              `https://github.com/ibm-client-engineering/solution-name/edit/main/${blogDirPath}/${blogPath}`,
+              `https://github.com/ibm-client-engineering/solution-satellite/edit/main/${blogDirPath}/${blogPath}`,
             blogTitle: 'Journey Log',
             blogSidebarTitle: 'All our logs',
             postsPerPage: 10,
@@ -148,7 +148,7 @@ async function createconfig() {
             {to: '/', label: 'Flight Path', position: 'right'},
             {to: 'blog', label: 'Flight Logs', position: 'right'},
             {
-              href: 'https://github.com/ibm-client-engineering/solution-name',
+              href: 'https://github.com/ibm-client-engineering/solution-satellite',
               className: "header-github-link",
               position: 'right',
             },

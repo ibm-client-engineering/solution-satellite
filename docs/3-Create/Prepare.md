@@ -8,7 +8,7 @@ title: Prepare
 
 ### IBM Cloud
 * IBM Cloud environment with access to IBM Satellite
-* Have the necessary permissions to create IAM API keys, ssh keys with full access to Satellite, ICD services, VPC infrastructure,VPC block storage and access to increased quota limits
+* Have the necessary permissions to create IAM API keys, SSH keys with full access to Satellite, ICD services, VPC infrastructure, VPC block storage, and access to increased quota limits
 * Terraform installation
 * API Key, SSH Key, COS bucket
 
