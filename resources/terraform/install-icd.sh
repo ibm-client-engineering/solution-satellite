@@ -9,7 +9,7 @@ fi
 
 ibmcloud login --apikey $TF_VAR_ibmcloud_api_key -q
 
-resource_group_id=$(ibmcloud resource group Satellite --id)
+resource_group_id=$(ibmcloud resource group ITZPOC-I-1271  --id)
 
 terraform init
 terraform plan -var-file=./satellite-ibmcloud.tfvars -out=./statefiles/satellite-ic.tfstate
