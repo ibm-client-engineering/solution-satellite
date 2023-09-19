@@ -116,6 +116,60 @@ Make sure to assign a host to each zone within the satellite location.
 6. 'Enable cluster admin access for Satellite Config' - keep all other areas to default option
 7. Name cluster and 'Create'
 
+#### Expose Openshift service for public access
+
+ <a href="https://cloud.ibm.com/docs/openshift?topic=openshift-access_cluster#sat_public_access" target="_blank">Reference Docs</a>
+
+1. List all satellite locations and make note of appropriate location's name and id
+    ```sh
+        ibmcloud sat location ls
+    ```
+2. Review the location subdomains and check the Records for the private IP addresses of the hosts that are registered in the DNS for the subdomain.
+    ```sh
+    ibmcloud sat location dns ls --location <location_name_or_ID from step 1>
+    ```
+3. Retrieve appropriate host names/ids belonging to the Infrastructure cluster of your control plane hosts.
+    * Make note of cluser name for step 7 
+     ```sh
+    ibmcloud sat host ls --location <location_name_or_ID from step 1>
+    ```
+4. In IBM cloud console navigate to the sidebar and select 'VPC Infrastructure' -> 'Virtual Service Instances'
+    * Retreive the Floating IP For each control plane hosts' name/id from step 3  
+
+5. Update the location subdomain DNS record with the public IP (Floating IPs from step 4) addresses of each host in the control plane.
+    ```sh
+    ibmcloud sat location dns register --location <location_name_or_ID> --ip <host_IP> --ip <host_IP> --ip <host_IP>
+    ```
+6. Verify that the public IP addresses are registered with your location DNS record.
+    ```sh
+    ibmcloud sat location dns ls --location <location_name_or_ID>
+    ```
+7. Get the Hostname for your cluster in the format ```<service_name>-<project>.<cluster_name>-<random_hash>-0000.upi.containers.appdomain.cloud``` and note the private IP(s) that were automatically registered.
+    * Use OCP cluster from output of step 3 for cluster_nam_or_ID
+    * Keep note of the hostname for step 10
+    
+    ```sh
+    ibmcloud oc nlb-dns ls --cluster <cluster_name_or_ID>
+    ```
+8.  Run:
+    ```sh
+    ibmcloud sat host ls --location <location_name_or_ID>
+    ```
+    Retrieve the name and private ips of the worker nodes belonging to the ocp cluster to be referenced for step 9
+
+9. Go to IBM Console and navigate to the sidebar and select 'VPC Infrastructure' -> 'Virtual Service Instances'
+    * Retreive the Floating IP For each worker node hosts' name/id from step 8 
+
+10. Add the public IP (Floating IP from step 9) addresses of the hosts that are assigned as worker nodes to this cluster to your cluster's subdomain. Repeat this command for each host's public IP (Floating IP) address.
+      ```sh
+    ibmcloud oc nlb-dns add --ip <public_IP> --cluster <cluster_name_or_ID> --nlb-host <hostname from step 7>
+    ```
+11. Remove the private IP addresses from your cluster's subdomain. Repeat this command for all private IP addresses that you retrieved earlier.
+    ```sh
+    ibmcloud oc nlb-dns rm classic --ip <private_IP> --cluster <cluster_name_or_ID> --nlb-host <hostname>
+    ```
+
+
 
 ### AWS
 :::tip
